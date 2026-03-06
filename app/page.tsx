@@ -41,15 +41,13 @@ function Home() {
   // ------------------------------
   // scroll to bottom when new line added
   useEffect(() => {
-    if (phase !== "done" && phase !== "fading" && scrollRef.current) {
-    if (scrollRef.current) {
+    if (phase !== "fading" && scrollRef.current) {
       scrollRef.current.scrollTo({
         top: scrollRef.current.scrollHeight,
         behavior: "smooth",
       });
     }
-  }
-  }, [linesDisplay, typedIndex, fadeOutIndex,phase]);
+  }, [linesDisplay, typedIndex, fadeOutIndex, phase]);
 
   // ------------------------------
   // typing logic
