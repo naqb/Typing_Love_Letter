@@ -1,9 +1,6 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
-import { lines } from "./data";
-
-const QUESTION = "Password: Hello World";
-const CORRECT_ANSWER = "Hello World"; 
+import { lines } from "./data"; 
 
 
 function Home() {
@@ -20,7 +17,7 @@ function Home() {
   const [currentLine, setCurrentLine] = useState(0);
   const [typedIndex, setTypedIndex] = useState(0);
   const [linesDisplay, setLinesDisplay] = useState<string[]>([]);
-  const [phase, setPhase] = useState<"typing" | "waiting" | "fading" | "done">("typing");
+  const [phase, setPhase] = useState<"typing" | "waiting" | "fading">("typing");
 
   // fade out state
   const [fadeOutIndex, setFadeOutIndex] = useState(0);
@@ -29,19 +26,9 @@ function Home() {
   const [showCursor, setShowCursor] = useState(true);
 
   useEffect(() => {
-    fetch("/api/flag")
-      .then((res) => res.json())
-      .then((data) => {
-        setPhase(data.status === "read" ? "done" : "typing");
-      });
+    // Always start with typing animation
+    setPhase("typing");
   }, []);
-
-  const markAsRead = () => {
-    fetch("/api/flag", { method: "POST" })
-      .then(() => {
-        setPhase("done");
-      });
-  };
 
   // ------------------------------
   // let cursor blink
@@ -95,16 +82,6 @@ function Home() {
   }, [phase, currentLine, typedIndex, lines]);
 
   // ------------------------------
-  // fading after all lines are printed
-  useEffect(() => {
-    if (phase === "waiting") {
-      const timer = setTimeout(() => {
-        setPhase("fading");
-      }, finalPauseBeforeFading);
-      return () => clearTimeout(timer);
-    }
-  }, [phase, finalPauseBeforeFading]);
-
   // ------------------------------
   // calculate the current line with typing effect
   const getCurrentLinePartial = () => {
@@ -141,8 +118,8 @@ function Home() {
         }, fadeInterval);
         return () => clearTimeout(timer);
       } else {
-        setPhase("done");
-        markAsRead();
+        // Animation complete - stay faded
+        // Could restart animation here if desired: setPhase("typing");
       }
     }
   }, [phase, fadeOutIndex, combinedTextArray.length, fadeInterval]);
@@ -161,12 +138,12 @@ function Home() {
 
 
   return (
-    <div className="min-h-screen bg-black p-8">
+    <div className="min-h-screen p-8" style={{ backgroundColor: '#fb6f92' }}>
       {
         phase !== "done" && (
           <div
           ref={scrollRef}
-          className="text-white text-xl leading-8 whitespace-pre-wrap overflow-y-auto max-h-[80vh] w-full px-4 border border-gray-600 rounded-md content"
+          className="text-white text-xl leading-8 whitespace-pre-wrap overflow-y-auto max-h-[80vh] w-full px-4 content"
           style={{
             padding: "16px",
             height: "80vh",
@@ -216,34 +193,6 @@ function Home() {
 
 
 export default function App() {
-  const [userInput, setUserInput] = useState("");
-
-  // deal with user input
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setUserInput(value);
-  };
-
-  // verify user input
-  const isAuthenticated = userInput.toLowerCase() === CORRECT_ANSWER.toLowerCase();
-
-  // if user input is correct, show the home page
-  if (isAuthenticated) {
-    return <Home />;
-  }
-
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-black text-white">
-      <div className="p-6 rounded-lg shadow-lg w-96" style={{ backgroundColor: "#2b2d37" }}>
-        <h1 className="text-2xl font-bold mb-4 text-center">{QUESTION}</h1>
-        <input
-          type="text"
-          className="w-full p-2 text-black rounded-md"
-          placeholder="input answer"
-          value={userInput}
-          onChange={handleInputChange} 
-        />
-      </div>
-    </div>
-  );
+  // Directly show the home page without password authentication
+  return <Home />;
 }
