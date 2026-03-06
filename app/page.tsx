@@ -136,52 +136,41 @@ function Home() {
 
   return (
     <div className="min-h-screen p-8" style={{ backgroundColor: '#fb6f92' }}>
-      {
-        phase !== "done" && (
-          <div
-          ref={scrollRef}
-          className="text-white text-xl leading-8 whitespace-pre-wrap overflow-y-auto max-h-[80vh] w-full px-4 content"
-          style={{
-            padding: "16px",
-            height: "80vh",
-            paddingBottom: "80px",
-          }}
-        >
-          {(phase === "fading") ? (
-            // fading phase: show all text with fading out effect
-            combinedTextArray.map((char, i) => {
-              if (char === "\n") return <br key={i} />;
-              if (removedChars.includes(String(i))) return null;
-              const charFading = i < fadeOutIndex && phase === "fading";
-              return (
-                <span
-                  key={i}
-                  className="inline-block transition-opacity"
-                  style={{
-                    transitionDuration: `${fadeDuration}ms`,
-                    opacity: charFading  ? 0 : 1,
-                  }}
-                >
-                  {char}
-                </span>
-              );
-            })
-          ) : (
-            // typing/waiting phase: show current line with typing effect
-            [...linesDisplay, getCurrentLinePartial() || (showCursor ? "_" : " ")].map((line, index) => (
-              <div key={index}>{line}</div>
-            ))
-          )}
-        </div>
-        )
-      }
-      {
-        phase === "done" && (
-          <div className="text-white text-xl leading-8 whitespace-pre-wrap overflow-y-auto max-h-[80vh] w-full px-4  border-gray-600 rounded-md text-center">
-            Best wishes to you
-          </div>
-        )
-      }
+      <div
+        ref={scrollRef}
+        className="text-white text-xl leading-8 whitespace-pre-wrap overflow-y-auto max-h-[80vh] w-full px-4 content"
+        style={{
+          padding: "16px",
+          height: "80vh",
+          paddingBottom: "80px",
+        }}
+      >
+        {(phase === "fading") ? (
+          // fading phase: show all text with fading out effect
+          combinedTextArray.map((char, i) => {
+            if (char === "\n") return <br key={i} />;
+            if (removedChars.includes(String(i))) return null;
+            const charFading = i < fadeOutIndex && phase === "fading";
+            return (
+              <span
+                key={i}
+                className="inline-block transition-opacity"
+                style={{
+                  transitionDuration: `${fadeDuration}ms`,
+                  opacity: charFading  ? 0 : 1,
+                }}
+              >
+                {char}
+              </span>
+            );
+          })
+        ) : (
+          // typing/waiting phase: show current line with typing effect
+          [...linesDisplay, getCurrentLinePartial() || (showCursor ? "_" : " ")].map((line, index) => (
+            <div key={index}>{line}</div>
+          ))
+        )}
+      </div>
      
     </div>
   );
