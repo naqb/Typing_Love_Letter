@@ -9,7 +9,6 @@ function Home() {
   // ========== Animation Parameters ==========
   const typingSpeed = 50; // Typing speed
   const cursorBlinkSpeed = 500; // Cursor blink interval
-  const finalPauseBeforeFading = 1500; // Waiting time after all lines are printed
   const fadeInterval = 10; // Interval between each character fading out
   const fadeDuration = 2000; // Transition duration from opaque to transparent
 
@@ -79,7 +78,7 @@ function Home() {
         setPhase("waiting");
       }
     }
-  }, [phase, currentLine, typedIndex, lines]);
+  }, [phase, currentLine, typedIndex]);
 
   // ------------------------------
   // ------------------------------
